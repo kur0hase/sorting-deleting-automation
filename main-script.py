@@ -7,6 +7,7 @@ class main():
         self.targetpath = ''
         self.useroption = ''
         self.foundextension = set()
+        self.files = []
         self.confirmation = False
 
     def interface(self):
@@ -43,17 +44,18 @@ class main():
         return f'\nMaking {self.targetpath} as target'
 
     def identify_extension(self):
-        for s in self.targetpath.iterdir():
-            self.foundextension.add(s.suffix)
+        for items in self.targetpath.iterdir():
+            self.foundextension.add(items.suffix)
 
     def sorting(self):
-        if self.confirmation == True:
-            for items in self.foundextension:
-                os.mkdir(f'{items}')
-            files_name = list(self.targetpath.iterdir())
-            for items in files_name.suffix:
-                if items.exists:
-                    shutil.move(items, items)
+        for file_path in self.targetpath.iterdir():
+            if file_path.is_file():
+                folder_name = file_path.suffix.lstrip('.').lower() or "no_extension"
+                new_folder = self.targetpath / folder_name
+                new_folder.mkdir(parents=True, exist_ok=True)
+                new_file_path = new_folder / file_path.name
+                file_path.rename(new_file_path)
+        
 
     def deletion(self):
         pass
