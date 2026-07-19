@@ -53,3 +53,13 @@ def deletefiles(extension):
 # -------------- Interface ----------------
 print('---------------- File Type-based Auto Sort and Deletion Tool ----------------' \
 '\nGitHub: kur0hase')
+print('\nWhat do you want to do?\na. Change Working Directory    b. See Current Working Directory    c. Auto Sort Files    d. Rename Files    e. Delete Files')
+userinput = input('\nSelect option: ')
+
+useroption = userinput.lower()
+validoptions = "a b c d e"
+
+# validating answer
+if useroption in validoptions:
+    if useroption == 'a':
+        pass
