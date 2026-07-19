@@ -2,7 +2,6 @@ from pathlib import Path
 import os
 
 directory = ''
-confirmation = False
 
 def setcwd(path):
     if path.exists() and not path.is_file():
@@ -14,7 +13,10 @@ def setcwd(path):
 
 def see_cwd():
     cwd = os.getcwd()
-    print(f'\nCurrent working path: {cwd}')
+    return f'\nCurrent working path: {cwd}'
+
+def confirmation():
+    return True
 
 def available_suffix():
     types = set()
@@ -53,13 +55,18 @@ def deletefiles(extension):
 # -------------- Interface ----------------
 print('---------------- File Type-based Auto Sort and Deletion Tool ----------------' \
 '\nGitHub: kur0hase')
-print('\nWhat do you want to do?\na. Change Working Directory    b. See Current Working Directory    c. Auto Sort Files    d. Rename Files    e. Delete Files')
-userinput = input('\nSelect option: ')
+print('\nWhat do you want to do?' \
+'\nNote: Please check current working directory first before choosing modification options.' \
+'\n1. See Current Working Directory    2. Change Working Directory    3. Auto Sort Files    4. Rename Files    5. Delete Files')
 
-useroption = userinput.lower()
-validoptions = "a b c d e"
+userinput = input('\nSelect option (number): ')
+
+validoptions = ['1', '2', '3', '4']
 
 # validating answer
-if useroption in validoptions:
-    if useroption == 'a':
-        pass
+if userinput in validoptions and len(userinput) == 1:
+    if userinput == '1':
+        print(see_cwd())
+    elif userinput == '2':
+        inputdir = input('\nEnter directory (e.g: ~/Documents/Files): ')
+        setcwd(inputdir)
