@@ -3,6 +3,8 @@ import os
 
 directory = ''
 
+# ------------------ Options Logic ---------------------
+
 def setcwd(path):
     if path.exists() and not path.is_file():
         os.chdir(path)
@@ -16,13 +18,18 @@ def see_cwd():
     return f'\nCurrent working path: {cwd}'
 
 def confirmation():
-    return True
+    this = input('\nConfirm your action [Y/n]: ')
+    thislow = this.casefold()
+    if thislow == 'y':
+        return True
+    elif thislow == 'n':
+        return False
 
 def available_suffix():
     types = set()
     for i in directory.iterdir():
         types.add(i.suffix)
-    print(types)
+    return types
         
 def sortfiles():
     for file_path in directory.iterdir():
@@ -53,6 +60,7 @@ def deletefiles(extension):
 
 
 # -------------- Interface ----------------
+
 print('---------------- File Type-based Auto Sort and Deletion Tool ----------------' \
 '\nGitHub: kur0hase')
 print('\nWhat do you want to do?' \
@@ -70,3 +78,15 @@ if userinput in validoptions and len(userinput) == 1:
     elif userinput == '2':
         inputdir = input('\nEnter directory (e.g: ~/Documents/Files): ')
         setcwd(inputdir)
+    elif userinput == '3':
+        confirmation()
+        if confirmation():
+            sortfiles()
+        else:
+            print('\nProcess aborted.')
+    elif userinput == '4':
+        confirmation()
+        if confirmation():
+            pass
+        else:
+            pass
