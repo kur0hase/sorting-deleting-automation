@@ -6,7 +6,8 @@ directory = ''
 # ------------------ Options Logic ---------------------
 
 def setcwd(path):
-    if path.exists() and not path.is_file():
+    directory = Path(path)
+    if directory.exists() and not directory.is_file():
         os.chdir(path)
         directory = path
         print(f'\nTarget directory changed to {directory}.')
@@ -47,6 +48,8 @@ def renamefiles(extension, name):
             src = f"{file}"
             dst = f"{name}{str(count)}.{file.suffix}"
             os.rename(src, dst)
+        else:
+            print('\nFile type not found.')
     print('\nFile(s) renamed successfully!')
 
 def deletefiles(extension):
@@ -58,6 +61,9 @@ def deletefiles(extension):
                 print(f'Deleting: {file}')
     print('\nFIles deleted successfully!')
 
+def aborting_process():
+    print('\nProcess aborted.')
+
 
 # -------------- Interface ----------------
 
@@ -67,30 +73,44 @@ print('\nWhat do you want to do?' \
 '\nNote: Please check current working directory first before choosing modification options.' \
 '\n1. See Current Working Directory    2. Change Working Directory    3. Auto Sort Files    4. Rename Files    5. Delete Files')
 
-userinput = input('\nSelect option (number): ')
+while True:
+    userinput = input('\nSelect option (number): ')
 
-validoptions = ['1', '2', '3', '4']
+    validoptions = ['1', '2', '3', '4']
 
-# validating answer
-if userinput in validoptions and len(userinput) == 1:
-    if userinput == '1':
-        print(see_cwd())
-    elif userinput == '2':
-        inputdir = input('\nEnter directory (e.g: ~/Documents/Files): ')
-        setcwd(inputdir)
-    elif userinput == '3':
-        confirmation()
-        if confirmation():
-            sortfiles()
-        else:
-            print('\nProcess aborted.')
-    elif userinput == '4':
-        confirmation()
-        if confirmation():
-            print('\nAvailable file types in the directory:')
-            print(available_suffix())
-            extension = input('\nPick an extension of files to rename: ')
-            name = input('\nInsert new name: ')
-            renamefiles(extension, name)
-        else:
-            pass
+    # validating answer
+    if userinput in validoptions and len(userinput) == 1:
+        if userinput == '1':
+            print(see_cwd())
+        elif userinput == '2':
+            inputdir = input('\nEnter directory (e.g: ~/Documents/Files): ')
+            setcwd(inputdir)
+        elif userinput == '3':
+            if confirmation():
+                sortfiles()
+            else:
+                aborting_process()
+        elif userinput == '4':
+            confirmation()
+            if confirmation():
+                print('\nAvailable file types in the directory:')
+                print(available_suffix())
+                extension = input('\nPick an extension of files to rename: ')
+                name = input('\nInsert new name: ')
+                renamefiles(extension, name)
+                break
+            else:
+                aborting_process()
+        elif userinput == '5':
+            if confirmation():
+                print('\nAvailable file types in the directory:')
+                print(available_suffix())
+                extension = input('\nPick an extension of files to delete: ')
+                deletefiles(extension)
+            else:
+                aborting_process()
+    else:
+        print('\nPlease input a valid option.')
+
+
+# /home/0x96hase/Downloads/try1
