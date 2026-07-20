@@ -87,6 +87,10 @@ if userinput in validoptions and len(userinput) == 1:
     elif userinput == '4':
         confirmation()
         if confirmation():
-            pass
+            print('\nAvailable file types in the directory:')
+            print(available_suffix())
+            extension = input('\nPick an extension of files to rename: ')
+            name = input('\nInsert new name: ')
+            renamefiles(extension, name)
         else:
             pass
