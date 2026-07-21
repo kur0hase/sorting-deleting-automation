@@ -1,68 +1,69 @@
 from pathlib import Path
 import os
 
-directory = ''
+class Options:
+    def __init__(self):
+        self.directory = ''
 
-# ------------------ Options Logic ---------------------
+    # ------------------ Options Logic ---------------------
 
-def setcwd(path):
-    directory = Path(path)
-    if directory.exists() and not directory.is_file():
-        os.chdir(path)
+    def setcwd(path):
         directory = path
-        print(f'\nTarget directory changed to {directory}.')
-    else:
-        print('\nFailed to change directory: Directory not found.')
-
-def see_cwd():
-    cwd = os.getcwd()
-    return f'\nCurrent working path: {cwd}'
-
-def confirmation():
-    this = input('\nConfirm your action [Y/n]: ')
-    thislow = this.casefold()
-    if thislow == 'y':
-        return True
-    elif thislow == 'n':
-        return False
-
-def available_suffix():
-    types = set()
-    for i in directory.iterdir():
-        types.add(i.suffix)
-    return types
-        
-def sortfiles():
-    for file_path in directory.iterdir():
-        if file_path.is_file():
-            folder_name = file_path.suffix.lstrip('.').lower() or "no_extension"
-            new_folder = directory / folder_name
-            new_folder.mkdir(parents=True, exist_ok=True)
-            new_file_path = new_folder / file_path.name
-            file_path.rename(new_file_path)
-    print('\nFiles sorted successfully!')
-
-def renamefiles(extension, name):
-    for count, file in enumerate(directory.iterdir()):
-        if extension in file.suffix:
-            src = f"{file}"
-            dst = f"{name}{str(count)}.{file.suffix}"
-            os.rename(src, dst)
+        if directory.exists() and not directory.is_file():
+            os.chdir(path)
+            print(f'\nTarget directory changed to {directory}.')
         else:
-            print('\nFile type not found.')
-    print('\nFile(s) renamed successfully!')
+            print('\nFailed to change directory: Directory not found.')
 
-def deletefiles(extension):
-    filelist = directory.iterdir()
-    for file in filelist:
-        if file.is_file():
-            if extension in file:
-                os.remove(file)
-                print(f'Deleting: {file}')
-    print('\nFIles deleted successfully!')
+    def see_cwd():
+        cwd = os.getcwd()
+        return f'\nCurrent working path: {cwd}'
 
-def aborting_process():
-    print('\nProcess aborted.')
+    def confirmation():
+        this = input('\nConfirm your action [Y/n]: ')
+        thislow = this.casefold()
+        if thislow == 'y':
+            return True
+        elif thislow == 'n':
+            return False
+
+    def available_suffix():
+        types = set()
+        for i in directory.iterdir():
+            types.add(i.suffix)
+        return types
+            
+    def sortfiles():
+        for file_path in directory.iterdir():
+            if file_path.is_file():
+                folder_name = file_path.suffix.lstrip('.').lower() or "no_extension"
+                new_folder = directory / folder_name
+                new_folder.mkdir(parents=True, exist_ok=True)
+                new_file_path = new_folder / file_path.name
+                file_path.rename(new_file_path)
+        print('\nFiles sorted successfully!')
+
+    def renamefiles(extension, name):
+        for count, file in enumerate(directory.iterdir()):
+            if extension in file.suffix:
+                src = f"{file}"
+                dst = f"{name}{str(count)}.{file.suffix}"
+                os.rename(src, dst)
+            else:
+                print('\nFile type not found.')
+        print('\nFile(s) renamed successfully!')
+
+    def deletefiles(extension):
+        filelist = directory.iterdir()
+        for file in filelist:
+            if file.is_file():
+                if extension in file:
+                    os.remove(file)
+                    print(f'Deleting: {file}')
+        print('\nFIles deleted successfully!')
+
+    def aborting_process():
+        print('\nProcess aborted.')
 
 
 # -------------- Interface ----------------
