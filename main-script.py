@@ -1,69 +1,72 @@
 from pathlib import Path
 import os
 
-class Options:
-    def __init__(self):
-        self.directory = ''
+directory = ''
 
     # ------------------ Options Logic ---------------------
 
-    def setcwd(path):
-        directory = path
-        if directory.exists() and not directory.is_file():
-            os.chdir(path)
-            print(f'\nTarget directory changed to {directory}.')
-        else:
-            print('\nFailed to change directory: Directory not found.')
+def setcwd(path):
+    global directory
+    directory = path
+    userpath = Path(directory)
+    if userpath.exists() and not userpath.is_file():
+        os.chdir(path)
+        print(f'\nTarget directory changed to {directory}.')
+    else:
+        print('\nFailed to change directory: Directory not found.')
 
-    def see_cwd():
-        cwd = os.getcwd()
-        return f'\nCurrent working path: {cwd}'
+def see_cwd():
+    cwd = os.getcwd()
+    return f'\nCurrent working path: {cwd}'
 
-    def confirmation():
-        this = input('\nConfirm your action [Y/n]: ')
-        thislow = this.casefold()
-        if thislow == 'y':
-            return True
-        elif thislow == 'n':
-            return False
+def confirmation():
+    this = input('\nConfirm your action [Y/n]: ')
+    thislow = this.casefold()
+    if thislow == 'y':
+        return True
+    elif thislow == 'n':
+        return False
 
-    def available_suffix():
-        types = set()
-        for i in directory.iterdir():
-            types.add(i.suffix)
-        return types
+def available_suffix():
+    userpath = Path(directory)
+    types = set()
+    for i in userpath.iterdir():
+        types.add(i.suffix)
+    return types
             
-    def sortfiles():
-        for file_path in directory.iterdir():
-            if file_path.is_file():
-                folder_name = file_path.suffix.lstrip('.').lower() or "no_extension"
-                new_folder = directory / folder_name
-                new_folder.mkdir(parents=True, exist_ok=True)
-                new_file_path = new_folder / file_path.name
-                file_path.rename(new_file_path)
-        print('\nFiles sorted successfully!')
+def sortfiles():
+    userpath = Path(directory)
+    for file_path in userpath.iterdir():
+        if file_path.is_file():
+            folder_name = file_path.suffix.lstrip('.').lower() or "no_extension"
+            new_folder = userpath / folder_name
+            new_folder.mkdir(parents=True, exist_ok=True)
+            new_file_path = new_folder / file_path.name
+            file_path.rename(new_file_path)
+    print('\nFiles sorted successfully!')
 
-    def renamefiles(extension, name):
-        for count, file in enumerate(directory.iterdir()):
-            if extension in file.suffix:
-                src = f"{file}"
-                dst = f"{name}{str(count)}.{file.suffix}"
-                os.rename(src, dst)
-            else:
-                print('\nFile type not found.')
-        print('\nFile(s) renamed successfully!')
+def renamefiles(extension, name):
+    userpath = Path(directory)
+    for count, file in enumerate(userpath.iterdir()):
+        if extension in file.suffix:
+            src = f"{file}"
+            dst = f"{name}{str(count)}{file.suffix}"
+            os.rename(src, dst)
+        else:
+            print('\nFile type not found.')
+    print('\nFile(s) renamed successfully!')
 
-    def deletefiles(extension):
-        filelist = directory.iterdir()
-        for file in filelist:
-            if file.is_file():
-                if extension in file:
-                    os.remove(file)
-                    print(f'Deleting: {file}')
-        print('\nFIles deleted successfully!')
+def deletefiles(extension):
+    userpath = Path(directory)
+    filelist = userpath.iterdir()
+    for file in filelist:
+        if file.is_file() and extension in file.suffix:
+            os.remove(file)
+            print(f'Deleting: {file}')
+    print('\nFiles deleted successfully!')
 
-    def aborting_process():
-        print('\nProcess aborted.')
+def aborting_process():
+    print('\nProcess aborted.')
 
 
 # -------------- Interface ----------------
@@ -71,13 +74,13 @@ class Options:
 print('---------------- File Type-based Auto Sort and Deletion Tool ----------------' \
 '\nGitHub: kur0hase')
 print('\nWhat do you want to do?' \
-'\nNote: Please check current working directory first before choosing modification options.' \
-'\n1. See Current Working Directory    2. Change Working Directory    3. Auto Sort Files    4. Rename Files    5. Delete Files')
+'\n\nNote: Please set current working directory first before choosing other modification options.' \
+'\n\n1. See Current Working Directory    2. Set Current Working Directory    3. Auto Sort Files    4. Rename Files    5. Delete Files')
 
 while True:
     userinput = input('\nSelect option (number): ')
 
-    validoptions = ['1', '2', '3', '4']
+    validoptions = ['1', '2', '3', '4', '5']
 
     # validating answer
     if userinput in validoptions and len(userinput) == 1:
@@ -92,14 +95,16 @@ while True:
             else:
                 aborting_process()
         elif userinput == '4':
-            confirmation()
             if confirmation():
                 print('\nAvailable file types in the directory:')
                 print(available_suffix())
-                extension = input('\nPick an extension of files to rename: ')
+                extension = input('\nPick an extension of files to rename (e.g: .jpg): ')
                 name = input('\nInsert new name: ')
-                renamefiles(extension, name)
-                break
+                if extension in available_suffix():
+                    renamefiles(extension, name)
+                    break
+                else:
+                    print('\nPlease input a valid extension suffix available.')
             else:
                 aborting_process()
         elif userinput == '5':
@@ -108,6 +113,7 @@ while True:
                 print(available_suffix())
                 extension = input('\nPick an extension of files to delete: ')
                 deletefiles(extension)
+                break
             else:
                 aborting_process()
     else:
