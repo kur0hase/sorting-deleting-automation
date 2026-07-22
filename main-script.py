@@ -52,8 +52,6 @@ def renamefiles(extension, name):
             src = f"{file}"
             dst = f"{name}{str(count)}{file.suffix}"
             os.rename(src, dst)
-        else:
-            print('\nFile type not found.')
     print('\nFile(s) renamed successfully!')
 
 def deletefiles(extension):
@@ -120,4 +118,4 @@ while True:
         print('\nPlease input a valid option.')
 
 
-# /home/0x96hase/Downloads/try1
+# /home/0x96hase/Downloads
