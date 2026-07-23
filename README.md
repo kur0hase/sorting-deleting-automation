@@ -5,3 +5,6 @@
 - Naming and enumerating files (of the same file type)
 - Sorting/moving it to the folder of the same type
 - Remove unpreferred file type in bulk
+
+
+*this is my practice of using pathlib and os module*
