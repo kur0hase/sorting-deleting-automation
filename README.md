@@ -7,4 +7,4 @@
 - Remove unpreferred file type in bulk
 
 
-*this is my practice of using pathlib and os module*
+*this project is my practice of using pathlib and os module*
